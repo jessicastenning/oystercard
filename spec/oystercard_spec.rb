@@ -10,11 +10,18 @@ describe Oystercard do
       expect{ subject.top_up(91) }.to raise_error 'Balance cannot exceed £90'
     end
   end
+
   describe '#deduct' do
     it 'should reduce balance by specified amount' do
       subject.top_up(10)
       subject.deduct(5)
       expect(subject.balance).to eq 5
+    end
+  end
+
+  describe '#in_journey?' do
+    it 'should not be in journey' do
+      expect(subject.in_journey?).to eq false
     end
   end
 end
