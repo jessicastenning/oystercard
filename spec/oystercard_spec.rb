@@ -26,6 +26,9 @@ describe Oystercard do
   end
 
   describe '#touch_in' do
+    it 'should fail if card balance < £1' do
+      expect{ subject.touch_in }.to raise_error 'Card balance is too low'
+    end
     it 'should adjust status to in_journey' do
       subject.top_up(10)
       subject.touch_in
