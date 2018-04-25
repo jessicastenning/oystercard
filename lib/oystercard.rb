@@ -33,5 +33,5 @@ MINIMUM_BALANCE = 1
   def deduct(amount)
     @balance -= amount
   end
-
+#comment
 end
