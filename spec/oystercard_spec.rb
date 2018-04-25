@@ -30,7 +30,7 @@ describe Oystercard do
     it 'should remember the entry station after touch_in' do
       subject.top_up(10)
       subject.touch_in(station)
-      expect(subject.entry_station).to eq (station)
+      expect(subject.current_journey[:entry_station]).to eq (station)
     end
   end
   describe '#touch_out' do
@@ -39,17 +39,27 @@ describe Oystercard do
       subject.touch_in(station)
     end
     it 'should adjust status to not_in_journey' do
-      subject.touch_out
+      subject.touch_out(station)
       expect(subject.in_journey?).to eq false
     end
     it 'should forget the entry station on touch_out' do
       subject.top_up(10)
       subject.touch_in(station)
-      expect { subject.touch_out }.to change{ subject.entry_station}.to nil
+      subject.touch_out(station)
+      expect(subject.current_journey).to be_an_instance_of(Hash).and be_empty
     end
     it 'should reduce the balance on card by the cost of the journey' do
-      expect { subject.touch_out }.to change{ subject.balance }.by(-Oystercard::MINIMUM_BALANCE)
+      expect { subject.touch_out(station) }.to change{ subject.balance }.by(-Oystercard::MINIMUM_BALANCE)
     end
   end
+
+  it 'should save current_journey' do
+    subject.top_up(10)
+    subject.touch_in(station)
+    subject.touch_out(station)
+    last_journey = subject.journeys.pop
+    expect(last_journey[:entry_station]).to eq station
+    expect(last_journey[:exit_station]).to eq station
 end
-#comment
+
+end
